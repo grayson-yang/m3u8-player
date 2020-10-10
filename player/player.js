@@ -15,9 +15,9 @@ function httpGetAsync(theUrl, success){
     });
 }
 
-function playTwitter(twitter_id){
-  var host = 'http://127.0.0.1:5000';
-  var path = '/1.1/videos/tweet/config/' + twitter_id + '.json';
+function playTwitter(twitter_link){
+  var host = 'http://10.154.10.111:5000';
+  var path = '/1.1/videos/tweet/get_m3u8?twitter_link=' + twitter_link;
   var serverUrl =  host + path
   httpGetAsync(serverUrl, function(result){
     m3u8_url = result?.track?.playbackUrl
@@ -77,8 +77,37 @@ function vidFullscreen() {
     }
 }
 
-playM3u8(window.location.href.split("#")[1])
-playTwitter(window.location.href.split("#")[1])
+function parseURL(url) {
+    var a = document.createElement('a');
+    a.href = url;
+    return {
+        source: url,
+        protocol: a.protocol.replace(':',''),
+        host: a.hostname,
+        port: a.port,
+        query: a.search,
+        params: (function(){
+            var ret = {},
+            seg = a.search.replace(/^\?/,'').split('&'),
+            len = seg.length, i = 0, s;
+            for (;i<len;i++) {
+                if (!seg[i]) { continue; }
+                s = seg[i].split('=');
+                ret[s[0]] = s[1];
+            }
+            return ret;
+        })(),
+        file: (a.pathname.match(/\/([^\/?#]+)$/i) || [,''])[1],
+        hash: a.hash.replace('#',''),
+        path: a.pathname.replace(/^([^\/])/,'/$1'),
+        relative: (a.href.match(/tps?:\/\/[^\/]+(.+)/) || [,''])[1],
+        segments: a.pathname.replace(/^\//,'').split('/')
+    };
+}
+
+//playM3u8(window.location.href.split("#")[1])
+requestURL = parseURL(window.location.href)
+playTwitter(requestURL.params.twitter_link)
 $(window).on('load', function () {
     $('#video').on('click', function(){this.paused?this.play():this.pause();});
     Mousetrap.bind('space', playPause);
