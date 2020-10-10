@@ -1,5 +1,30 @@
 var video = document.getElementById('video');
 
+function httpGetAsync(theUrl, success){
+    const Url = theUrl;
+    $.ajax({
+        url:Url,
+        type:'GET',
+        success:function(result){
+            console.log(result);
+            success(result);
+        },
+        error:function(error){
+            console.log('Error!');
+        }
+    });
+}
+
+function playTwitter(twitter_id){
+  var host = 'http://127.0.0.1:5000';
+  var path = '/1.1/videos/tweet/config/' + twitter_id + '.json';
+  var serverUrl =  host + path
+  httpGetAsync(serverUrl, function(result){
+    m3u8_url = result?.track?.playbackUrl
+    playM3u8(m3u8_url)
+  });
+}
+
 function playM3u8(url){
   if(Hls.isSupported()) {
       video.volume = 0.3;
@@ -53,6 +78,7 @@ function vidFullscreen() {
 }
 
 playM3u8(window.location.href.split("#")[1])
+playTwitter(window.location.href.split("#")[1])
 $(window).on('load', function () {
     $('#video').on('click', function(){this.paused?this.play():this.pause();});
     Mousetrap.bind('space', playPause);
