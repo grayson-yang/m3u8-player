@@ -109,7 +109,7 @@ function parseURL(url) {
 requestURL = parseURL(window.location.href)
 playTwitter(requestURL.params.twitter_link)
 $(window).on('load', function () {
-    $('#video').on('click', function(){this.paused?this.play():this.pause();});
+//    $('#video').on('click', function(){this.paused?this.play():this.pause();});
     Mousetrap.bind('space', playPause);
     Mousetrap.bind('up', volumeUp);
     Mousetrap.bind('down', volumeDown);
