@@ -33,14 +33,16 @@ function playM3u8(url){
       hls.loadSource(m3u8Url);
       hls.attachMedia(video);
       hls.on(Hls.Events.MANIFEST_PARSED,function() {
-        video.play();
+		  /* auto play the video */
+          // video.play();
       });
       document.title = url
     }
 	else if (video.canPlayType('application/vnd.apple.mpegurl')) {
 		video.src = url;
 		video.addEventListener('canplay',function() {
-		  video.play();
+		  /* auto play the video */
+		  // video.play();
 		});
 		video.volume = 0.3;
 		document.title = url;
@@ -75,34 +77,6 @@ function vidFullscreen() {
   } else if (video.webkitRequestFullscreen) {
       video.webkitRequestFullscreen();
     }
-}
-
-function parseURL(url) {
-    var a = document.createElement('a');
-    a.href = url;
-    return {
-        source: url,
-        protocol: a.protocol.replace(':',''),
-        host: a.hostname,
-        port: a.port,
-        query: a.search,
-        params: (function(){
-            var ret = {},
-            seg = a.search.replace(/^\?/,'').split('&'),
-            len = seg.length, i = 0, s;
-            for (;i<len;i++) {
-                if (!seg[i]) { continue; }
-                s = seg[i].split('=');
-                ret[s[0]] = s[1];
-            }
-            return ret;
-        })(),
-        file: (a.pathname.match(/\/([^\/?#]+)$/i) || [,''])[1],
-        hash: a.hash.replace('#',''),
-        path: a.pathname.replace(/^([^\/])/,'/$1'),
-        relative: (a.href.match(/tps?:\/\/[^\/]+(.+)/) || [,''])[1],
-        segments: a.pathname.replace(/^\//,'').split('/')
-    };
 }
 
 //playM3u8(window.location.href.split("#")[1])
