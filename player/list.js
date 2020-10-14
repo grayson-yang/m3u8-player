@@ -33,4 +33,6 @@ function getTweets(screen_name){
     }
   });
 }
-getTweets('TwitterDev');
+
+requestURL = parseURL(window.location.href);
+getTweets(requestURL.params.screen_name);
