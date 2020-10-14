@@ -1,19 +1,9 @@
-var video = document.getElementById('video');
+/**
+ * player.js
+ * @dependency common.js, jquery-3.2.1.min.js
+ */
 
-function httpGetAsync(theUrl, success){
-    const Url = theUrl;
-    $.ajax({
-        url:Url,
-        type:'GET',
-        success:function(result){
-            console.log(result);
-            success(result);
-        },
-        error:function(error){
-            console.log('Error!');
-        }
-    });
-}
+var video = document.getElementById('video');
 
 function playTwitter(twitter_link){
   var host = 'http://10.154.10.111:5000';

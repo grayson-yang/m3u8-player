@@ -1,3 +1,7 @@
+/**
+ * common.js
+ * @dependency jquery-3.2.1.min.js
+ */
 
 function parseURL(url) {
     var a = document.createElement('a');
@@ -25,4 +29,19 @@ function parseURL(url) {
         relative: (a.href.match(/tps?:\/\/[^\/]+(.+)/) || [,''])[1],
         segments: a.pathname.replace(/^\//,'').split('/')
     };
+}
+
+function httpGetAsync(theUrl, success){
+    const Url = theUrl;
+    $.ajax({
+        url:Url,
+        type:'GET',
+        success:function(result){
+            console.log(result);
+            success(result);
+        },
+        error:function(error){
+            console.log('Error!');
+        }
+    });
 }
