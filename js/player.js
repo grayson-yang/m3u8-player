@@ -3,40 +3,44 @@
  * @dependency common.js, jquery-3.2.1.min.js
  */
 
-var video = document.getElementById('video');
+//var video = document.getElementById('video');
 
 function playTwitter(twitter_link){
   var host = 'http://10.154.10.111:5000';
   var path = '/1.1/videos/tweet/get_m3u8?twitter_link=' + twitter_link;
   var serverUrl =  host + path
-  httpGetAsync(serverUrl, function(result){
-    m3u8_url = result?.track?.playbackUrl
-    playM3u8(m3u8_url)
-  });
-}
+  $.get(serverUrl).done(function(res){
+    m3u8_url = res["track"]["playbackUrl"];
+    return new Promise(function(resolve, reject){
+        $.get(m3u8_url).done(function(res){
+            resolve(res);
+        }).fail(function(error){reject(error);});
+    }).then(function(m3u8_res){
+        m3u8_json = parseM3U8ToJson(m3u8_res);
+        console.log(m3u8_json)
+        quality = [];
+        for(var key in m3u8_json){
+            quality.push({
+                name: m3u8_json[key].RESOLUTION,
+                url: 'http://10.154.10.111:8081' + m3u8_json[key].url,
+                type: 'hls'
+            });
+        }
+        const dp = new DPlayer({
+            container: document.getElementById('dplayer'),
+            video: {
+                quality: quality,
+                defaultQuality: 0,
+                pic: 'demo.png',
+                thumbnails: 'thumbnails.jpg'
+            }
+        });
+      })
+  }).fail(function onRejected(error){
+    console.log('Error: ' + error);
+  }).always(function () {
 
-function playM3u8(url){
-  if(Hls.isSupported()) {
-      video.volume = 0.3;
-      var hls = new Hls();
-      var m3u8Url = decodeURIComponent(url)
-      hls.loadSource(m3u8Url);
-      hls.attachMedia(video);
-      hls.on(Hls.Events.MANIFEST_PARSED,function() {
-		  /* auto play the video */
-          // video.play();
-      });
-      document.title = url
-    }
-	else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-		video.src = url;
-		video.addEventListener('canplay',function() {
-		  /* auto play the video */
-		  // video.play();
-		});
-		video.volume = 0.3;
-		document.title = url;
-  	}
+  });
 }
 
 function playPause() {

@@ -3,7 +3,7 @@
  * @dependency common.js
  */
 function addVideoPanel(tweet_url){
-    var panel = '    <div style="width:300px; height:200px; margin:auto; background:black">'
+    var panel = '    <div style="width:478px; height:360px; margin:auto; background:black">'
     +'<iframe style="width:100%; height:100%"'
     +'        src="/player/?twitter_link=' + tweet_url + '">'
     +'</iframe>'
