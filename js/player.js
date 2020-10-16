@@ -10,8 +10,11 @@ function playTwitter(twitter_link){
   var path = '/1.1/videos/tweet/get_m3u8?twitter_link=' + twitter_link;
   var serverUrl =  host + path
   $.get(serverUrl).done(function(res){
-    m3u8_url = res["track"]["playbackUrl"];
     return new Promise(function(resolve, reject){
+        if('errors' in res){
+            reject(res);
+        }
+        m3u8_url = res["track"]["playbackUrl"];
         $.get(m3u8_url).done(function(res){
             resolve(res);
         }).fail(function(error){reject(error);});
@@ -35,6 +38,8 @@ function playTwitter(twitter_link){
                 thumbnails: 'thumbnails.jpg'
             }
         });
+      }).catch(function(reason){
+        $("body").html(reason.errors);
       })
   }).fail(function onRejected(error){
     console.log('Error: ' + error);
