@@ -11,13 +11,13 @@ screen_name = requestURL.params.screen_name;
 getTweets(screen_name);
 
 function addVideoPanel(tweet_url){
-    var panel = '    <div style="width:478px; height:360px; margin:auto; background:black">'
-    +'<iframe style="width:100%; height:100%"'
-    +'        src="/player/?twitter_link=' + tweet_url + '">'
-    +'</iframe>'
-    +'</div>';
-    var container = document.getElementById('container');
-    container.innerHTML += panel;
+    var divObj = document.createElement("div");
+    divObj.setAttribute("style", "width:478px; height:360px; margin:auto; background:black");
+    var iframeObj = document.createElement("iframe");
+    iframeObj.setAttribute("style", "width:100%; height:100%");
+    iframeObj.setAttribute("src", "/player/?twitter_link=" + tweet_url);
+    divObj.appendChild(iframeObj);
+    $("#container")[0].appendChild(divObj);
 }
 
 function getTweets(screen_name, cursor, count){
